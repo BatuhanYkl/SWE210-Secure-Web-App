@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<style>
+  .login-wrap { min-height: calc(100vh - 60px); display: flex; align-items: center; justify-content: center; }
+  .login-box { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2.5rem 2rem; width: 100%; max-width: 400px; }
+  .login-logo { text-align: center; font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .login-title { text-align: center; font-size: 1.4rem; font-weight: 700; color: #60a5fa; margin-bottom: 0.3rem; }
+  .login-sub { text-align: center; color: #64748b; font-size: 0.85rem; margin-bottom: 1.8rem; }
+  label { display: block; font-size: 0.82rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 0.35rem; }
+  input[type=text], input[type=password] {
+    width: 100%; padding: 0.65rem 0.9rem; background: #0f172a; border: 1px solid #334155;
+    border-radius: 8px; color: #e2e8f0; font-size: 0.95rem; margin-bottom: 1.1rem; outline: none;
+    transition: border-color .2s;
+  }
+  input:focus { border-color: #3b82f6; }
+  .btn-login { width: 100%; padding: 0.75rem; background: #2563eb; color: #fff; border: none;
+    border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background .2s; }
+  .btn-login:hover { background: #1d4ed8; }
+  .demo-creds { margin-top: 1.5rem; background: #0f172a; border: 1px solid #1e3a5f; border-radius: 8px; padding: 1rem; }
+  .demo-creds h4 { color: #60a5fa; font-size: 0.8rem; margin-bottom: 0.5rem; }
+  .cred { display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; margin: 3px 0; }
+  .cred span { font-family: monospace; color: #fbbf24; }
+  .lock-icon { color: #3b82f6; font-size: 1rem; }
+  .security-note { text-align: center; color: #475569; font-size: 0.72rem; margin-top: 1rem; }
+</style>
+
+<div class="login-wrap">
+  <div class="login-box">
+    <div class="login-logo">🔐</div>
+    <div class="login-title">SecureApp</div>
+    <div class="login-sub">SWE210 — Secure Web Application</div>
+
+    <form method="POST">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter your username" required autocomplete="off"/>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required/>
+
+      <button type="submit" class="btn-login">Sign In</button>
+    </form>
+
+    <div class="demo-creds">
+      <h4>🧪 Demo Credentials</h4>
+      <div class="cred">Admin: <span>admin / Admin@1234</span></div>
+      <div class="cred">User:  <span>alice / Alice@5678</span></div>
+      <div class="cred">User:  <span>bob / Bob@9999</span></div>
+    </div>
+    <div class="security-note">🔒 Passwords hashed with PBKDF2-SHA256 · Data encrypted with AES-256</div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="container">
+  <h1 style="font-size:1.6rem; margin-bottom:1.5rem; color:#f1f5f9;">
+    Welcome, <span style="color:#60a5fa;">{{ username }}</span>
+    <span class="badge badge-{{ role }}" style="vertical-align:middle; font-size:0.7rem;">{{ role }}</span>
+  </h1>
+
+  <!-- Profile Card -->
+  <div class="card">
+    <div class="card-title">👤 Your Profile</div>
+    <div class="info-row">
+      <span class="info-label">Username</span>
+      <span class="info-value">{{ username }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Role</span>
+      <span class="info-value"><span class="badge badge-{{ role }}">{{ role }}</span></span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Email</span>
+      <span class="info-value">{{ email }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Phone</span>
+      <span class="info-value">{{ phone }}</span>
+    </div>
+  </div>
+
+  <!-- Encryption Demo Card -->
+  <div class="card">
+    <div class="card-title">🔐 Encryption Demonstration (AES-256-CBC)</div>
+    <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:1rem;">
+      Your sensitive data is stored encrypted in the database. Below you can see both the raw ciphertext and the decrypted values.
+    </p>
+    <div class="info-row">
+      <span class="info-label">Encrypted Email</span>
+      <span class="info-value mono">{{ encrypted_email }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Decrypted Email</span>
+      <span class="info-value">{{ email }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Encrypted Phone</span>
+      <span class="info-value mono">{{ encrypted_phone }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Decrypted Phone</span>
+      <span class="info-value">{{ phone }}</span>
+    </div>
+  </div>
+
+  <!-- Security Info Card -->
+  <div class="card">
+    <div class="card-title">🛡️ Security Features Active</div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem;">
+      <div style="background:#0f172a;border-radius:8px;padding:1rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">🔑</div>
+        <div style="font-weight:600;color:#60a5fa;margin-bottom:0.3rem;">Password Hashing</div>
+        <div style="font-size:0.8rem;color:#94a3b8;">PBKDF2-HMAC-SHA256 with 100,000 iterations and random salt</div>
+      </div>
+      <div style="background:#0f172a;border-radius:8px;padding:1rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">🔒</div>
+        <div style="font-weight:600;color:#60a5fa;margin-bottom:0.3rem;">AES-256 Encryption</div>
+        <div style="font-size:0.8rem;color:#94a3b8;">CBC mode with random IV for each encryption operation</div>
+      </div>
+      <div style="background:#0f172a;border-radius:8px;padding:1rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">🎭</div>
+        <div style="font-weight:600;color:#60a5fa;margin-bottom:0.3rem;">Role-Based Access</div>
+        <div style="font-size:0.8rem;color:#94a3b8;">Admin panel restricted — only admin accounts can access it</div>
+      </div>
+    </div>
+  </div>
+
+  {% if role == 'admin' %}
+  <div style="text-align:center;">
+    <a href="{{ url_for('admin_panel') }}" class="btn btn-primary">Go to Admin Panel →</a>
+  </div>
+  {% else %}
+  <div class="card" style="border-color:#7f1d1d; background:#1c1010;">
+    <div class="card-title" style="color:#f87171;">🚫 Admin Panel — Access Restricted</div>
+    <p style="color:#94a3b8; font-size:0.88rem;">
+      The admin panel is only accessible to users with the <strong>admin</strong> role.
+      Attempting to access <code>/admin</code> as a regular user will be denied.
+    </p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

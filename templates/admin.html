@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+<div class="container">
+  <h1 style="font-size:1.6rem; margin-bottom:0.5rem; color:#f1f5f9;">🛠️ Admin Panel</h1>
+  <p style="color:#64748b; font-size:0.88rem; margin-bottom:1.5rem;">Full system access — visible to administrators only</p>
+
+  <!-- User Management -->
+  <div class="card">
+    <div class="card-title">👥 All Users</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Email (Decrypted)</th>
+          <th>Stored (Encrypted)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td><strong>{{ u.username }}</strong></td>
+          <td><span class="badge badge-{{ u.role }}">{{ u.role }}</span></td>
+          <td>{{ u.email }}</td>
+          <td class="mono" style="font-size:0.7rem;">{{ u.enc_email[:40] }}…</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- System Info -->
+  <div class="card">
+    <div class="card-title">⚙️ System Security Configuration</div>
+    <div class="info-row">
+      <span class="info-label">Hash Algorithm</span>
+      <span class="info-value">PBKDF2-HMAC-SHA256</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Iterations</span>
+      <span class="info-value">100,000</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Salt Length</span>
+      <span class="info-value">256 bits (32 bytes, random per user)</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Encryption</span>
+      <span class="info-value">AES-256-CBC</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">IV</span>
+      <span class="info-value">128 bits (16 bytes, random per operation)</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Padding</span>
+      <span class="info-value">PKCS7</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Access Control</span>
+      <span class="info-value">Role-Based Access Control (RBAC) — Admin / User</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Session</span>
+      <span class="info-value">Flask server-side sessions with secret key</span>
+    </div>
+  </div>
+
+  <!-- RBAC Explanation -->
+  <div class="card">
+    <div class="card-title">🎭 RBAC — Role-Based Access Control</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div style="background:#0f172a;border-radius:8px;padding:1rem;border:1px solid #166534;">
+        <div style="font-weight:700;color:#22c55e;margin-bottom:0.75rem;">👑 Admin Role</div>
+        <ul style="color:#94a3b8;font-size:0.85rem;padding-left:1.2rem;line-height:1.8;">
+          <li>Access to Admin Panel</li>
+          <li>View all users and their data</li>
+          <li>View system configuration</li>
+          <li>Access all encrypted data</li>
+          <li>Full dashboard access</li>
+        </ul>
+      </div>
+      <div style="background:#0f172a;border-radius:8px;padding:1rem;border:1px solid #1e3a5f;">
+        <div style="font-weight:700;color:#60a5fa;margin-bottom:0.75rem;">👤 User Role</div>
+        <ul style="color:#94a3b8;font-size:0.85rem;padding-left:1.2rem;line-height:1.8;">
+          <li>Dashboard access only</li>
+          <li>View own profile data</li>
+          <li>See encryption demo</li>
+          <li>❌ No Admin Panel access</li>
+          <li>❌ Cannot view other users</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
