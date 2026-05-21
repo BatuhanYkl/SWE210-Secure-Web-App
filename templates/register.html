@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<style>
+  .reg-wrap { min-height: calc(100vh - 60px); display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+  .reg-box { background: #0c0c0c; border: 1px solid #1f1f1f; border-radius: 16px; padding: 2.5rem 2rem; width: 100%; max-width: 440px; }
+  .reg-title { text-align: center; font-size: 1.35rem; font-weight: 700; color: #fff; margin-bottom: 0.25rem; }
+  .reg-sub { text-align: center; color: #a3a3a3; font-size: 0.85rem; margin-bottom: 1.5rem; text-transform: uppercase; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+  .form-full { grid-column: 1 / -1; }
+  label { display: block; font-size: 0.75rem; font-weight: 600; color: #d4d4d4; text-transform: uppercase; margin-bottom: 0.3rem; margin-top: 1rem; }
+  input[type=text], input[type=password], input[type=tel] {
+    width: 100%; padding: 0.65rem 0.9rem; background: #050505; border: 1px solid #1f1f1f;
+    border-radius: 8px; color: #fff; font-size: 0.93rem; outline: none; transition: all 0.2s;
+  }
+  input:focus { border-color: #3b82f6; background: #0a0a0a; }
+  .btn-register { width: 100%; padding: 0.75rem; background: #16a34a; color: #fff; border: none;
+    border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 1.5rem; transition: background .2s; }
+  .btn-register:hover { background: #15803d; }
+  .login-link { text-align: center; margin-top: 1.25rem; font-size: 0.85rem; color: #a3a3a3; }
+  .req-box { background: #050505; border: 1px solid #1e3a5f; border-radius: 8px; padding: 0.85rem 1rem; margin-top: 1.5rem; }
+  .req-box h4 { color: #60a5fa; font-size: 0.78rem; margin-bottom: 0.45rem; text-transform: uppercase; }
+  .req-box ul { color: #d4d4d4; font-size: 0.78rem; padding-left: 1.1rem; line-height: 1.7; }
+</style>
+
+<div class="reg-wrap">
+  <div class="reg-box">
+    <div class="reg-title">Student Ledger Enrolment</div>
+    <div class="reg-sub">Initialize Academic Identity</div>
+
+    <form method="POST">
+      <div class="form-grid">
+        <div class="form-full">
+          <label for="username">Desired Username</label>
+          <input type="text" id="username" name="username" placeholder="e.g. jsmith" required autocomplete="off"/>
+        </div>
+        <div class="form-full">
+          <label for="password">Cryptographic Password</label>
+          <input type="password" id="password" name="password" placeholder="Min. 6 characters" required/>
+        </div>
+        
+        <div class="form-full">
+          <label for="student_no">Student ID Number</label>
+          <input type="text" id="student_no" name="student_no" placeholder="Must be exactly 10 digits" required maxlength="10"/>
+        </div>
+        <div class="form-full">
+          <label for="department">Academic Department</label>
+          <input type="text" id="department" name="department" placeholder="e.g. Computer Engineering" required/>
+        </div>
+
+        <div class="form-full">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="Must be 11 digits starting with 05" required maxlength="11"/>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-register">Register Account</button>
+    </form>
+
+    <div class="req-box">
+      <h4>🔒 System Cryptographic Invariants</h4>
+      <ul>
+        <li>Authentication uses <strong>PBKDF2-SHA256</strong> with 100,000 iterations.</li>
+        <li>Student ID, Department, and Phone are fully encrypted via <strong>AES-256-CBC</strong>.</li>
+        <li>Official Email is auto-generated as <code>[StudentID]@stu.istinye.edu.tr</code>.</li>
+      </ul>
+    </div>
+
+    <div class="login-link">Already verified? <a href="{{ url_for('login') }}">Sign in here</a></div>
+  </div>
+</div>
+{% endblock %}

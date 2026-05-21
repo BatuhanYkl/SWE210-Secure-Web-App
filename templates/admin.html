@@ -1,97 +1,156 @@
 {% extends "base.html" %}
-{% block title %}Admin Panel{% endblock %}
+{% block title %}Instructor Control Panel{% endblock %}
 {% block content %}
 <div class="container">
-  <h1 style="font-size:1.6rem; margin-bottom:0.5rem; color:#f1f5f9;">🛠️ Admin Panel</h1>
-  <p style="color:#64748b; font-size:0.88rem; margin-bottom:1.5rem;">Full system access — visible to administrators only</p>
+  <h1 style="font-size:1.6rem; margin-bottom:0.25rem; color:#fff;">🛠️ Instructor Cryptographic Management Dashboard</h1>
+  <p style="color:#a3a3a3; font-size:0.88rem; margin-bottom:1.5rem; text-transform:uppercase; letter-spacing: 0.5px;">
+    Security Context Isolation Active: <span style="color:#f59e0b; font-weight:bold;">{{ course_code }} - {{ course_name }}</span>
+  </p>
 
-  <!-- User Management -->
-  <div class="card">
-    <div class="card-title">👥 All Users</div>
-    <table>
-      <thead>
-        <tr>
-          <th>Username</th>
-          <th>Role</th>
-          <th>Email (Decrypted)</th>
-          <th>Stored (Encrypted)</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for u in users %}
-        <tr>
-          <td><strong>{{ u.username }}</strong></td>
-          <td><span class="badge badge-{{ u.role }}">{{ u.role }}</span></td>
-          <td>{{ u.email }}</td>
-          <td class="mono" style="font-size:0.7rem;">{{ u.enc_email[:40] }}…</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('tab-users', this)">👥 Grading Ledger</button>
+    <button class="tab" onclick="switchTab('tab-database', this)">🗄️ Encrypted DB Cells</button>
+    <button class="tab" onclick="switchTab('tab-security', this)">⚙️ Cryptographic Invariants</button>
+    <button class="tab" onclick="switchTab('tab-rbac', this)">🎭 RBAC Governance</button>
   </div>
 
-  <!-- System Info -->
-  <div class="card">
-    <div class="card-title">⚙️ System Security Configuration</div>
-    <div class="info-row">
-      <span class="info-label">Hash Algorithm</span>
-      <span class="info-value">PBKDF2-HMAC-SHA256</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Iterations</span>
-      <span class="info-value">100,000</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Salt Length</span>
-      <span class="info-value">256 bits (32 bytes, random per user)</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Encryption</span>
-      <span class="info-value">AES-256-CBC</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">IV</span>
-      <span class="info-value">128 bits (16 bytes, random per operation)</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Padding</span>
-      <span class="info-value">PKCS7</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Access Control</span>
-      <span class="info-value">Role-Based Access Control (RBAC) — Admin / User</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Session</span>
-      <span class="info-value">Flask server-side sessions with secret key</span>
-    </div>
-  </div>
-
-  <!-- RBAC Explanation -->
-  <div class="card">
-    <div class="card-title">🎭 RBAC — Role-Based Access Control</div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-      <div style="background:#0f172a;border-radius:8px;padding:1rem;border:1px solid #166534;">
-        <div style="font-weight:700;color:#22c55e;margin-bottom:0.75rem;">👑 Admin Role</div>
-        <ul style="color:#94a3b8;font-size:0.85rem;padding-left:1.2rem;line-height:1.8;">
-          <li>Access to Admin Panel</li>
-          <li>View all users and their data</li>
-          <li>View system configuration</li>
-          <li>Access all encrypted data</li>
-          <li>Full dashboard access</li>
-        </ul>
+  <div id="tab-users" class="tab-content active">
+    <div class="card">
+      <div class="card-title">
+        <span>Student Grade Book & Evaluation Sheet</span>
+        <span style="font-size:0.75rem; color:#a3a3a3; font-weight:normal;">Enforces secure parameters for authorized tracking</span>
       </div>
-      <div style="background:#0f172a;border-radius:8px;padding:1rem;border:1px solid #1e3a5f;">
-        <div style="font-weight:700;color:#60a5fa;margin-bottom:0.75rem;">👤 User Role</div>
-        <ul style="color:#94a3b8;font-size:0.85rem;padding-left:1.2rem;line-height:1.8;">
-          <li>Dashboard access only</li>
-          <li>View own profile data</li>
-          <li>See encryption demo</li>
-          <li>❌ No Admin Panel access</li>
-          <li>❌ Cannot view other users</li>
-        </ul>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Student Account</th>
+              <th>Department</th>
+              <th style="text-align: center; width: 90px;">Midterm</th>
+              <th style="text-align: center; width: 90px;">Final Exam</th>
+              <th style="text-align: center; width: 110px;">Absence (Days)</th>
+              <th style="text-align: center; width: 100px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in students %}
+            <tr>
+              <form method="POST" action="{{ url_for('update_grades') }}">
+                <input type="hidden" name="username" value="{{ s.username }}">
+                <td style="color: #cbd5e1; font-family: monospace; font-weight: 600;">{{ s.student_no_dec }}</td>
+                <td style="color: #fff; font-weight: 600;">{{ s.username }}</td>
+                <td style="color: #cbd5e1;">{{ s.department_dec }}</td>
+                
+                <td style="text-align: center;">
+                  <input type="number" name="midterm" value="{{ s.midterm }}" min="0" max="100" style="width: 60px; padding: 5px; background: #000; color: #fff; border: 1px solid #262626; border-radius: 4px; text-align: center;">
+                </td>
+                <td style="text-align: center;">
+                  <input type="number" name="final" value="{{ s.final }}" min="0" max="100" style="width: 60px; padding: 5px; background: #000; color: #fff; border: 1px solid #262626; border-radius: 4px; text-align: center;">
+                </td>
+                <td style="text-align: center;">
+                  <input type="number" name="attendance" value="{{ s.attendance }}" min="0" max="100" style="width: 60px; padding: 5px; background: #000; color: #ef4444; border: 1px solid #262626; border-radius: 4px; text-align: center;">
+                </td>
+                
+                <td style="text-align: center;">
+                  <button type="submit" class="btn btn-success" style="padding: 4px 10px; font-size: 0.8rem;">Commit</button>
+                </td>
+              </form>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+
+  <div id="tab-database" class="tab-content">
+    <div class="card">
+      <div class="card-title">🗄️ Persistent Storage View — Raw Relational Database Schema</div>
+      <p style="color:#cbd5e1; font-size:0.88rem; margin-bottom:1.25rem;">
+        Demonstrating SQLite backend defense mechanism. Sensitive PII attributes (Student ID, Department, Email, Phone) undergo <strong>AES-256-CBC</strong> encryption before storage operations. Plaintext values are completely absent from disk.
+      </p>
+      <div style="overflow-x:auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Student ID (Ciphertext)</th>
+              <th>Department (Ciphertext)</th>
+              <th>Email (Ciphertext)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in all_users %}
+            <tr>
+              <td style="color:#a3a3a3;">{{ u.id }}</td>
+              <td><strong style="color:#3b82f6;">{{ u.username }}</strong></td>
+              <td><span class="badge badge-{{ u.role }}">{{ u.role }}</span></td>
+              <td class="mono" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="{{ u.student_no }}">{{ u.student_no }}</td>
+              <td class="mono" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="{{ u.department }}">{{ u.department }}</td>
+              <td class="mono" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="{{ u.email }}">{{ u.email }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      
+      <div style="margin-top:1.5rem; background:#0a0a0a; border: 1px solid #1f1f1f; border-radius:8px; padding:1rem;">
+        <div style="font-size:0.82rem; color:#cbd5e1; line-height: 1.7;">
+          <strong style="color:#f59e0b;">📁 Database file:</strong> <code style="color:#60a5fa;">users.db</code> (SQLite) — located in the project folder<br/>
+          <strong style="color:#f59e0b;">📊 Table:</strong> <code style="color:#60a5fa;">users</code> — id, username, password_hash, role, email, phone, student_no, department, course_code, created_at<br/>
+          <strong style="color:#f59e0b;">🔐 Encryption:</strong> email, phone, student_no, and department fields encrypted with AES-256-CBC before INSERT operations.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-security" class="tab-content">
+    <div class="card">
+      <div class="card-title">⚙️ Global System Security & Cryptographic Primitive Configuration</div>
+      <div class="info-row"><span class="info-label">Password Hashing</span><span class="info-value">PBKDF2-HMAC-SHA256 Primitive Stack</span></div>
+      <div class="info-row"><span class="info-label">Work Factor</span><span class="info-value">100,000 Cryptographic Iterations</span></div>
+      <div class="info-row"><span class="info-label">Salt Entropy</span><span class="info-value">256-bit cryptographically secure pseudo-random sequence (Unique per user instance)</span></div>
+      <div class="info-row"><span class="info-label">Symmetric Encryption</span><span class="info-value">Advanced Encryption Standard (AES-256)</span></div>
+      <div class="info-row"><span class="info-label">Cipher Block Mode</span><span class="info-value">Cipher Block Chaining (CBC Mode)</span></div>
+      <div class="info-row"><span class="info-label">Initialization Vector</span><span class="info-value">128-bit explicit random IV produced per record generation cycle</span></div>
+      <div class="info-row"><span class="info-label">Block Padding Scheme</span><span class="info-value">PKCS7 Standard Compliant Padding</span></div>
+      <div class="info-row"><span class="info-label">Access Architecture</span><span class="info-value">Role-Based Access Control (RBAC Model) paired with Course Parameter Enforcement</span></div>
+      <div class="info-row"><span class="info-label">Session State Store</span><span class="info-value">Flask Server-Side Encrypted Session Tokens utilizing cryptographically bound signatures</span></div>
+    </div>
+  </div>
+
+  <div id="tab-rbac" class="tab-content">
+    <div class="card">
+      <div class="card-title">🎭 Cryptographic Role-Based Access Control (RBAC) Architecture</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+        <div style="background:#050505; border-radius:8px; padding:1.25rem; border:1px solid #14532d;">
+          <div style="font-weight:700; color:#4ade80; margin-bottom:0.75rem; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">👑 Instructor / Admin Domain</div>
+          <ul style="color:#cbd5e1; font-size:0.85rem; padding-left:1.2rem; line-height:2.0;">
+            <li>Full read/write execution access to administrative routing pathways</li>
+            <li>Authorized capability to decrypt specific cryptographic records bound to their track</li>
+            <li>Privileged execution boundaries over specialized evaluation fields</li>
+            <li>Strict cross-instructor boundary validation preventing horizontal tampering</li>
+          </ul>
+        </div>
+        <div style="background:#050505; border-radius:8px; padding:1.25rem; border:1px solid #1e3a5f;">
+          <div style="font-weight:700; color:#60a5fa; margin-bottom:0.75rem; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">👤 Student / Regular User Domain</div>
+          <ul style="color:#cbd5e1; font-size:0.85rem; padding-left:1.2rem; line-height:2.0;">
+            <li>Execution space strictly constrained to personal dashboard layouts</li>
+            <li>Zero administrative interaction endpoints available</li>
+            <li>Decryption execution bounds restricted exclusively to own cryptographic identity cells</li>
+            <li>Absolute implicit denial from intercepting other entity matrix data</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-title" style="margin-top:0.5rem;">🔒 Server-Side Access Guard Verification System</div>
+      <div class="info-row"><span class="info-label">login_required</span><span class="info-value">Decorator enforces state validation on user cookie contexts prior to processing controllers.</span></div>
+      <div class="info-row"><span class="info-label">admin_required</span><span class="info-value">Decorator verifies session context matches admin privileges prior to exposing administrative modules.</span></div>
+      <div class="info-row"><span class="info-label">State Storage</span><span class="info-value">All privileges reside strictly inside the backend environment, eliminating front-end forgery vulnerabilities.</span></div>
+    </div>
+  </div>
+
 </div>
 {% endblock %}

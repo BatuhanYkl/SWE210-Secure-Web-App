@@ -3,69 +3,68 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SecureApp – {% block title %}{% endblock %}</title>
+  <title>ISU Portal – {% block title %}{% endblock %}</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
-    a { color: #60a5fa; text-decoration: none; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #000000; color: #f5f5f5; min-height: 100vh; }
+    a { color: #3b82f6; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    /* NAV */
-    nav { background: #1e293b; border-bottom: 2px solid #334155; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
-    .nav-brand { font-size: 1.25rem; font-weight: 700; color: #60a5fa; letter-spacing: 1px; }
+    nav { background: #0c0c0c; border-bottom: 1px solid #1f1f1f; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .nav-brand { font-size: 1.2rem; font-weight: 700; color: #3b82f6; letter-spacing: 0.5px; }
     .nav-links { display: flex; gap: 1rem; align-items: center; }
-    .nav-links a { color: #cbd5e1; font-size: 0.9rem; padding: 0.4rem 0.8rem; border-radius: 6px; }
-    .nav-links a:hover { background: #334155; color: #fff; text-decoration: none; }
-    .badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; font-weight: 700; text-transform: uppercase; margin-left: 6px; }
-    .badge-admin { background: #dc2626; color: #fff; }
-    .badge-user  { background: #2563eb; color: #fff; }
+    .nav-links a { color: #d4d4d4; font-size: 0.88rem; padding: 0.4rem 0.8rem; border-radius: 6px; transition: all 0.2s; }
+    .nav-links a:hover { background: #1a1a1a; color: #fff; text-decoration: none; }
+    
+    .badge { font-size: 0.65rem; padding: 3px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; margin-left: 6px; border: 1px solid transparent; }
+    .badge-admin { background: #261010; color: #f87171; border-color: #7f1d1d; }
+    .badge-user  { background: #101b2e; color: #60a5fa; border-color: #1e3a5f; }
 
-    /* ALERTS */
-    .alerts { max-width: 900px; margin: 1rem auto 0; padding: 0 1rem; }
-    .alert { padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.9rem; }
-    .alert-success { background: #166534; border: 1px solid #22c55e; }
-    .alert-danger  { background: #7f1d1d; border: 1px solid #ef4444; }
-    .alert-warning { background: #78350f; border: 1px solid #f59e0b; }
-    .alert-info    { background: #1e3a5f; border: 1px solid #3b82f6; }
+    .alerts { max-width: 1000px; margin: 1rem auto 0; padding: 0 1rem; }
+    .alert { padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.88rem; border: 1px solid transparent; }
+    .alert-success { background: #061910; color: #4ade80; border-color: #14532d; }
+    .alert-danger  { background: #1c1010; color: #f87171; border-color: #7f1d1d; }
+    .alert-warning { background: #1c150c; color: #fbbf24; border-color: #78350f; }
+    .alert-info    { background: #0c1524; color: #60a5fa; border-color: #1e3a5f; }
 
-    /* CONTAINER */
-    .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+    .card { background: #0c0c0c; border: 1px solid #1f1f1f; border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; }
+    .card-title { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 1.25rem; border-bottom: 1px solid #1f1f1f; padding-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between; }
 
-    /* CARD */
-    .card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; }
-    .card-title { font-size: 1.2rem; font-weight: 700; color: #93c5fd; margin-bottom: 1rem; border-bottom: 1px solid #334155; padding-bottom: 0.75rem; }
-
-    /* TABLE */
     table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-    th { background: #0f172a; color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; padding: 0.75rem 1rem; text-align: left; }
-    td { padding: 0.75rem 1rem; border-bottom: 1px solid #1e293b; }
-    tr:hover td { background: #1a2744; }
+    th { background: #050505; color: #d4d4d4; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; padding: 0.85rem 1rem; text-align: left; border-bottom: 1px solid #1f1f1f; }
+    td { padding: 0.85rem 1rem; border-bottom: 1px solid #141414; color: #fff; }
+    tr:hover td { background: #0a0a0a; }
 
-    /* BTN */
-    .btn { display: inline-block; padding: 0.55rem 1.2rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: opacity .2s; }
-    .btn:hover { opacity: 0.85; text-decoration: none; }
+    .btn { display: inline-block; padding: 0.55rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.88rem; cursor: pointer; border: 1px solid transparent; transition: all .2s; text-align: center; }
     .btn-primary { background: #2563eb; color: #fff; }
-    .btn-danger  { background: #dc2626; color: #fff; }
-    .btn-sm { padding: 0.3rem 0.7rem; font-size: 0.8rem; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-success { background: #16a34a; color: #fff; }
+    .btn-success:hover { background: #15803d; }
 
-    /* INFO ROW */
-    .info-row { display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.65rem 0; border-bottom: 1px solid #334155; }
-    .info-label { color: #64748b; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; min-width: 110px; }
-    .info-value { color: #e2e8f0; word-break: break-all; }
-    .mono { font-family: monospace; font-size: 0.75rem; color: #fbbf24; }
+    .info-row { display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.75rem 0; border-bottom: 1px solid #141414; }
+    .info-label { color: #d4d4d4; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; min-width: 150px; letter-spacing: 0.5px; }
+    .info-value { color: #fff; word-break: break-all; }
+    .mono { font-family: monospace; font-size: 0.75rem; color: #f59e0b; }
 
-    /* FOOTER */
-    footer { text-align: center; color: #475569; font-size: 0.8rem; padding: 2rem; margin-top: 2rem; }
+    .tabs { display: flex; gap: 0.25rem; margin-bottom: 1.5rem; border-bottom: 1px solid #1f1f1f; }
+    .tab { padding: 0.6rem 1.2rem; border-radius: 8px 8px 0 0; font-size: 0.88rem; font-weight: 600; cursor: pointer; color: #d4d4d4; background: none; border: none; border-bottom: 2px solid transparent; transition: all .15s; }
+    .tab:hover { color: #fff; background: #0a0a0a; }
+    .tab.active { color: #3b82f6; border-bottom: 2px solid #3b82f6; background: #0a0a0a; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    footer { text-align: center; color: #a3a3a3; font-size: 0.78rem; padding: 3rem; margin-top: 2rem; border-top: 1px solid #141414; }
   </style>
 </head>
 <body>
 {% if session.username %}
 <nav>
-  <span class="nav-brand">🔒 SecureApp</span>
+  <span class="nav-brand">ISU Portal</span>
   <div class="nav-links">
-    <a href="{{ url_for('dashboard') }}">Dashboard</a>
-    {% if session.role == 'admin' %}<a href="{{ url_for('admin_panel') }}">Admin Panel</a>{% endif %}
-    <a href="{{ url_for('logout') }}" style="color:#f87171;">Logout</a>
+    <a href="{{ url_for('dashboard') }}">My Profile</a>
+    {% if session.role == 'admin' %}<a href="{{ url_for('admin_panel') }}">Instructor Panel</a>{% endif %}
+    <a href="{{ url_for('logout') }}" style="color:#ef4444;">Logout</a>
     <span class="badge badge-{{ session.role }}">{{ session.role }}</span>
   </div>
 </nav>
@@ -81,6 +80,15 @@
 
 {% block content %}{% endblock %}
 
-<footer>SWE210 Software Security — Secure Web Application</footer>
+<footer>SWE210 Software Security Course Project — İstinye University</footer>
+
+<script>
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

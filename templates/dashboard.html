@@ -1,91 +1,81 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Profile{% endblock %}
 {% block content %}
 <div class="container">
-  <h1 style="font-size:1.6rem; margin-bottom:1.5rem; color:#f1f5f9;">
-    Welcome, <span style="color:#60a5fa;">{{ username }}</span>
-    <span class="badge badge-{{ role }}" style="vertical-align:middle; font-size:0.7rem;">{{ role }}</span>
+  <h1 style="font-size:1.5rem; margin-bottom:1.5rem; color:#fff;">
+    Authenticated User: <span style="color:#3b82f6;">{{ username }}</span>
+    <span class="badge badge-{{ role }}" style="vertical-align:middle;">{{ role }}</span>
   </h1>
 
-  <!-- Profile Card -->
   <div class="card">
-    <div class="card-title">👤 Your Profile</div>
-    <div class="info-row">
-      <span class="info-label">Username</span>
-      <span class="info-value">{{ username }}</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Role</span>
-      <span class="info-value"><span class="badge badge-{{ role }}">{{ role }}</span></span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Email</span>
-      <span class="info-value">{{ email }}</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Phone</span>
-      <span class="info-value">{{ phone }}</span>
-    </div>
+    <div class="card-title">👤 Academic Profile Records</div>
+    <div class="info-row"><span class="info-label">System Username</span><span class="info-value">{{ username }}</span></div>
+    <div class="info-row"><span class="info-label">Student ID</span><span class="info-value">{{ student_no }}</span></div>
+    <div class="info-row"><span class="info-label">Department</span><span class="info-value">{{ department }}</span></div>
+    <div class="info-row"><span class="info-label">Official Email</span><span class="info-value">{{ email }}</span></div>
+    <div class="info-row"><span class="info-label">Secure Phone</span><span class="info-value">{{ phone }}</span></div>
+    {% if role == 'admin' %}
+      <div class="info-row"><span class="info-label">Assigned Core Track</span><span class="info-value" style="color:#f59e0b; font-weight:bold;">{{ course_code }}</span></div>
+    {% endif %}
   </div>
 
-  <!-- Encryption Demo Card -->
   <div class="card">
     <div class="card-title">🔐 Encryption Demonstration (AES-256-CBC)</div>
-    <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:1rem;">
-      Your sensitive data is stored encrypted in the database. Below you can see both the raw ciphertext and the decrypted values.
+    <p style="color:#a3a3a3; font-size:0.85rem; margin-bottom:1.5rem;">
+      Your data is stored securely in the local SQLite database. Below, you can see the raw ciphertext exactly as it rests on the disk compared to the decrypted values used during active sessions.
     </p>
-    <div class="info-row">
-      <span class="info-label">Encrypted Email</span>
-      <span class="info-value mono">{{ encrypted_email }}</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Decrypted Email</span>
-      <span class="info-value">{{ email }}</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Encrypted Phone</span>
-      <span class="info-value mono">{{ encrypted_phone }}</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Decrypted Phone</span>
-      <span class="info-value">{{ phone }}</span>
-    </div>
+    <div class="info-row"><span class="info-label">Encrypted Email</span><span class="info-value mono" style="word-break: break-all;">{{ encrypted_email }}</span></div>
+    <div class="info-row"><span class="info-label">Decrypted Email</span><span class="info-value" style="color:#4ade80; font-weight: 600;">{{ email }}</span></div>
+    <div class="info-row"><span class="info-label">Encrypted Phone</span><span class="info-value mono" style="word-break: break-all;">{{ encrypted_phone }}</span></div>
+    <div class="info-row"><span class="info-label">Decrypted Phone</span><span class="info-value" style="color:#4ade80; font-weight: 600;">{{ phone }}</span></div>
   </div>
 
-  <!-- Security Info Card -->
+  {% if role == 'user' %}
   <div class="card">
-    <div class="card-title">🛡️ Security Features Active</div>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem;">
-      <div style="background:#0f172a;border-radius:8px;padding:1rem;">
-        <div style="font-size:1.5rem;margin-bottom:0.5rem;">🔑</div>
-        <div style="font-weight:600;color:#60a5fa;margin-bottom:0.3rem;">Password Hashing</div>
-        <div style="font-size:0.8rem;color:#94a3b8;">PBKDF2-HMAC-SHA256 with 100,000 iterations and random salt</div>
-      </div>
-      <div style="background:#0f172a;border-radius:8px;padding:1rem;">
-        <div style="font-size:1.5rem;margin-bottom:0.5rem;">🔒</div>
-        <div style="font-weight:600;color:#60a5fa;margin-bottom:0.3rem;">AES-256 Encryption</div>
-        <div style="font-size:0.8rem;color:#94a3b8;">CBC mode with random IV for each encryption operation</div>
-      </div>
-      <div style="background:#0f172a;border-radius:8px;padding:1rem;">
-        <div style="font-size:1.5rem;margin-bottom:0.5rem;">🎭</div>
-        <div style="font-weight:600;color:#60a5fa;margin-bottom:0.3rem;">Role-Based Access</div>
-        <div style="font-size:0.8rem;color:#94a3b8;">Admin panel restricted — only admin accounts can access it</div>
-      </div>
+    <div class="card-title">📚 Enrolled Curriculum & Grade Book (Fixed Course Package)</div>
+    <div style="overflow-x: auto; margin-top: 10px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Course Code</th>
+            <th>Course Title</th>
+            <th style="text-align: center;">Midterm Score</th>
+            <th style="text-align: center;">Final Exam</th>
+            <th style="text-align: center;">Absenteeism (Days)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in records %}
+          <tr>
+            <td style="font-weight: bold; color: #3b82f6;">{{ r.course_code }}</td>
+            <td>{{ r.course_name }}</td>
+            <td style="text-align: center; color: #60a5fa; font-weight: 600;">{{ r.midterm }}</td>
+            <td style="text-align: center; color: #60a5fa; font-weight: 600;">{{ r.final }}</td>
+            <td style="text-align: center; color: #f87171; font-weight: 600;">{{ r.attendance }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-  </div>
-
-  {% if role == 'admin' %}
-  <div style="text-align:center;">
-    <a href="{{ url_for('admin_panel') }}" class="btn btn-primary">Go to Admin Panel →</a>
-  </div>
-  {% else %}
-  <div class="card" style="border-color:#7f1d1d; background:#1c1010;">
-    <div class="card-title" style="color:#f87171;">🚫 Admin Panel — Access Restricted</div>
-    <p style="color:#94a3b8; font-size:0.88rem;">
-      The admin panel is only accessible to users with the <strong>admin</strong> role.
-      Attempting to access <code>/admin</code> as a regular user will be denied.
-    </p>
   </div>
   {% endif %}
+
+  <div class="card">
+    <div class="card-title">🛡️ Active Security Cryptographic Mechanisms</div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem;">
+      <div style="background:#050505; border: 1px solid #141414; border-radius:8px; padding:1rem;">
+        <div style="font-weight:600; color:#3b82f6; margin-bottom:0.3rem;">Password Hashing Architecture</div>
+        <div style="font-size:0.8rem; color:#a3a3a3;">PBKDF2-HMAC-SHA256 with cryptographically strong unique salts per entry.</div>
+      </div>
+      <div style="background:#050505; border: 1px solid #141414; border-radius:8px; padding:1rem;">
+        <div style="font-weight:600; color:#3b82f6; margin-bottom:0.3rem;">PII Symmetric Encryption</div>
+        <div style="font-size:0.8rem; color:#a3a3a3;">AES-256-CBC mode sanitizes all student identity markers within DB storage cells.</div>
+      </div>
+      <div style="background:#050505; border: 1px solid #141414; border-radius:8px; padding:1rem;">
+        <div style="font-weight:600; color:#3b82f6; margin-bottom:0.3rem;">RBAC Isolation Guard</div>
+        <div style="font-size:0.8rem; color:#a3a3a3;">Instructors can access grade records restricted strictly to their verified track.</div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
